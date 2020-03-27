@@ -44,6 +44,7 @@ public class CPUPlayer extends Player {
 	
 	int lookAhead(Board b, int levels) {
 		
+		// Add up the scores of the various columns
 		int tally[] = new int[b.getColumns()];
 		
 		
