@@ -48,7 +48,7 @@ public class Player {
 		color = c;
 	}
 	
-	public int getMove(Board b) {
+	public int getMove(Board b) throws CloneNotSupportedException {
 		
 		Scanner s = new Scanner(System.in);
 		int move=0;

@@ -2,7 +2,7 @@
 // David's Connect 4 game
 // March 2020 
 
-public class Board {
+public class Board implements Cloneable {
 
 	public static final int EMPTY = 0;
 	public static final int RED = 1;
@@ -22,6 +22,23 @@ public class Board {
 		
 	}
 	
+	public Board(Board b) {
+		
+		rows = b.rows;
+		cols = b.cols;
+		board = new int[rows][cols];
+		turn = b.turn;
+		
+		for(int r=0; r<rows; r++) {
+			for(int c=0; c<cols; c++) {
+				
+				board[r][c] = b.getBoard()[r][c];
+				
+			}
+		}
+		
+	}
+	
 	public int getColumns() {
 		
 		return this.cols;
@@ -32,24 +49,47 @@ public class Board {
 		return this.board;
 	}
 	
-	public boolean move(int col) {
+	public Object clone() throws CloneNotSupportedException {
+		
+		//try {
+		  //      return (Board) super.clone();
+		//} catch (CloneNotSupportedException e) {
+		        return new Board(this);
+		    
+		//}
+		
+	}
+	
+	// Change players
+	private void switchPlayer() {
+		
+		this.turn = ((this.turn+2)%2)+1;
+		
+	}
+	
+	// Return whose turn it is
+	public int getTurn() {
+		
+		return this.turn;
+		
+	}
+	
+	public boolean move(int col, int color) {
+		
+		if(turn != color) return false;
 		
 		col -= 1; // to adjust for the 0th row
 		int rowfree=-1;
+			
 		for(int i=0; i<board.length; i++) {
 			if(board[i][col]==EMPTY) rowfree = i;
 		}
 		if(rowfree == -1) return false;
 		
-		if(turn==RED) {
-			board[rowfree][col] = RED;
-			turn = YELLOW;
-		}
-		else if(turn == YELLOW) {
-			board[rowfree][col] = YELLOW;
-			turn = RED;
-		}
-		else return false;
+		
+		// Make the move
+		board[rowfree][col] = turn;
+		switchPlayer();
 		
 		return true;
 	}
@@ -235,7 +275,6 @@ public class Board {
 								if(streak_val == board[r2][c2]) {		
 									streak++;
 									if(streak >= 4) {
-										System.out.println("Diagonal streak down");
 										return streak_val;
 									}
 								}
@@ -267,7 +306,6 @@ public class Board {
 								if(streak_val == board[r2][c2]) {		
 									streak++;
 									if(streak >= 4) {
-										System.out.println("Diagonal streak up");
 										return streak_val;
 									}
 								}

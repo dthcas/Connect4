@@ -9,7 +9,7 @@ public class Connect4 {
 		
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws CloneNotSupportedException {
 		// TODO Auto-generated method stub
 
 		// TODO Auto-generated method stub
@@ -48,7 +48,7 @@ public class Connect4 {
 		}
 	}
 		
-	private void onePlayerGame() {
+	private void onePlayerGame() throws CloneNotSupportedException {
 		
 		Board board = new Board(ROWS,COLS);
 		int firstmove = ((int)(Math.random()*2))+1;
@@ -58,6 +58,8 @@ public class Connect4 {
 		
 		HumanPlayer human = new HumanPlayer(firstmove,firstmove);
 		CPUPlayer computer = new CPUPlayer();
+		
+		computer.setColor(secondmove);
 		
 		int hmove;
 		int cmove;
@@ -69,7 +71,7 @@ public class Connect4 {
 			if(firstmove==2) {
 				System.out.println(computer.getName()+" the Computer is RED and goes first...");
 				cmove = computer.getMove(board);
-				while(count<20 && !board.move(cmove)) {
+				while(count<20 && !board.move(cmove,computer.getColor())) {
 					count++;
 					cmove = computer.getMove(board);
 				}
@@ -87,19 +89,27 @@ public class Connect4 {
 			// Human move
 			
 			hmove = human.getMove(board);
-			while(count<20 && !board.move(hmove)) {
+			while(count<20 && !board.move(hmove,human.getColor())) {
 				count++;
 				cmove = human.getMove(board);
 			}
 			count = 0;
 			board.printBoard();
 				
-
+			result = board.checkWinner();
+			if(result>0 && result==computer.getColor()) { 
+				printWinner(result,computer.getName());
+				return;
+			}
+			else if(result>0 && result==human.getColor()) { 
+				printWinner(result,human.getName());
+				return;
+			}
 			
 			// Computer move
 			
 			cmove = computer.getMove(board);
-			while(count<20 && !board.move(cmove)) {
+			while(count<20 && !board.move(cmove,computer.getColor())) {
 				count++;
 				cmove = computer.getMove(board);
 			}
@@ -130,7 +140,7 @@ public class Connect4 {
 
 
 
-	private void twoPlayerGame() {
+	private void twoPlayerGame() throws CloneNotSupportedException {
 		
 		Board board = new Board(ROWS,COLS);
 		int p1col = ((int)(Math.random()*2))+1;
@@ -145,7 +155,7 @@ public class Connect4 {
 		int count=0;
 		int result;
 		boolean firstmove = true;
-		boolean trymove;
+		//boolean trymove;
 				
 		while((result = board.checkWinner())==0) {
 		
@@ -153,7 +163,7 @@ public class Connect4 {
 				System.out.println(p2.getName()+" is RED and goes first");
 				board.printBoard();
 				p2move = p2.getMove(board);
-				while(count<20 && !board.move(p2move)) {
+				while(count<20 && !board.move(p2move,p2.getColor())) {
 					count++;
 					p2move = p2.getMove(board);
 				}
@@ -170,7 +180,7 @@ public class Connect4 {
 			// Player 1 move
 			
 			p1move = p1.getMove(board);
-			while(!board.move(p1move)) {
+			while(!board.move(p1move,p1.getColor())) {
 				count++;
 				p1move = p1.getMove(board);
 				
@@ -193,7 +203,7 @@ public class Connect4 {
 			// Player 2 move
 			
 			p2move = p2.getMove(board);
-			while(!board.move(p2move)) {
+			while(!board.move(p2move,p2.getColor())) {
 				count++;
 				p2move = p2.getMove(board);
 				
