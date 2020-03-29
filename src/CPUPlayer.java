@@ -18,7 +18,7 @@ public class CPUPlayer extends Player {
 	}
 	public CPUPlayer(String name) {
 		super();
-		System.out.print("Which level computer player do you want? (1-5): ");
+		System.out.print("Which level computer player do you want? (1-4): ");
 		Scanner s = new Scanner(System.in);
 		try {
 			
@@ -27,9 +27,9 @@ public class CPUPlayer extends Player {
 		catch(Exception e) {
 			
 			System.out.println("Weird input.. setting level to random");
-			level = (int)(Math.random()*5)+1;
+			level = (int)(Math.random()*4)+1;
 		}
-		level = Math.max(1,Math.min(5,level));
+		level = Math.max(1,Math.min(4,level));
 		System.out.println("Loading level "+level+" computer player...");
 		this.name = names[level-1];
 		
@@ -60,7 +60,8 @@ public class CPUPlayer extends Player {
 				tally[i] = -999999999;
 			}
 			else {
-				tally[i] = lookAhead(nextBoard(b,i,color),level*2,color);
+				if(b.getRound()<=2) tally[i] = lookAhead(nextBoard(b,i,color),b.getRound(),color);
+				else tally[i] = lookAhead(nextBoard(b,i,color),level*2,color);
 			}
 		}
 		
