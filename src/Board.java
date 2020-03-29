@@ -12,6 +12,7 @@ public class Board implements Cloneable {
 	int cols;
 	int [][] board;
 	int turn;
+	int round;
 	
 	public Board(int r, int c) {
 		
@@ -19,6 +20,7 @@ public class Board implements Cloneable {
 		cols = c;
 		board = new int[r][c];
 		turn = RED;
+		round = 1;
 		
 	}
 	
@@ -28,6 +30,7 @@ public class Board implements Cloneable {
 		cols = b.cols;
 		board = new int[rows][cols];
 		turn = b.turn;
+		round = 1;
 		
 		for(int r=0; r<rows; r++) {
 			for(int c=0; c<cols; c++) {
@@ -64,6 +67,7 @@ public class Board implements Cloneable {
 	private void switchPlayer() {
 		
 		this.turn = ((this.turn+2)%2)+1;
+		if(this.turn==RED) round++;
 		
 	}
 	
@@ -74,9 +78,16 @@ public class Board implements Cloneable {
 		
 	}
 	
+	public int getRound() {
+		
+		return this.round;
+	}
+	
 	public boolean move(int col, int color) {
 		
 		if(turn != color) return false;
+		if(col < 1 || col > cols) return false;
+		if(board[0][col-1]!=EMPTY) return false;
 		
 		col -= 1; // to adjust for the 0th row
 		int rowfree=-1;

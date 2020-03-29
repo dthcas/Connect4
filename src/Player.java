@@ -54,13 +54,19 @@ public class Player {
 		int move=0;
 		int cols = b.getColumns();
 		
-		while(move<=0 || move > cols) {
+		
 			System.out.print(this.name + "'s move: ");
-			move = s.nextInt();
+			try {
+				move = s.nextInt();
+			}
+			catch(Exception e) {
+				
+				move = -1; 
+			}
 			
 			if(move<=0 || move > cols)
 				System.out.println("Invalid move, please enter a number between 1 and" + cols);
-		}
+		
 		
 		return move;
 		

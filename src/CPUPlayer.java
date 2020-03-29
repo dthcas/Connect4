@@ -3,18 +3,34 @@ import java.util.Scanner;
 public class CPUPlayer extends Player {
 
 	int level;
-	String names[] = {"Bozo","Jeezy","Noddy","Porky","Ronald","Bryce","Eduardo","Pierce","Zabat","Ivan"};
+	private String names[] = {"Bozo","Noddy","Porky","Beebot","Zoltan","Gregor","Ivan"};
+	private String trashtalk[] = {	"Ouch.. you just got clowned on by Bozo.  Better luck next time!",
+									"Tee hee! Noddy just took you to school!",
+									"Porky just cooked your bacon at Connect 4.  Want another round in the frying pan?",
+									"Face it human, you're no match for Beebot!",
+									"You will never be able to best the mind of Zoltan!",
+									"The might of Gregor shall not be defeated, puny Earthling.  Now go away before you invoke my cosmic wrath!",
+									"Do not despair mortal, for I am the greatest Connect 4 player that ever lived!"};
+	
 
 	public CPUPlayer() {
 		this("");
 	}
 	public CPUPlayer(String name) {
 		super();
-		System.out.print("Which level computer player do you want? (1-10): ");
+		System.out.print("Which level computer player do you want? (1-5): ");
 		Scanner s = new Scanner(System.in);
-		level = s.nextInt();  // Take a number from the user
-		level = Math.max(1,Math.min(10,level));
-		System.out.println("Loading computer player...");
+		try {
+			
+			level = s.nextInt();  // Take a number from the user
+		}
+		catch(Exception e) {
+			
+			System.out.println("Weird input.. setting level to random");
+			level = (int)(Math.random()*5)+1;
+		}
+		level = Math.max(1,Math.min(5,level));
+		System.out.println("Loading level "+level+" computer player...");
 		this.name = names[level-1];
 		
 	}
@@ -39,11 +55,12 @@ public class CPUPlayer extends Player {
 		}
 		
 		for(int i=1; i<=b.getColumns(); i++) {
+			// If that particular column is empty, set the value of the move to an extreme value
 			if(b.getBoard()[0][i-1]!=Board.EMPTY) {
 				tally[i] = -999999999;
 			}
 			else {
-				tally[i] = lookAhead(nextBoard(b,i,color),level,color);
+				tally[i] = lookAhead(nextBoard(b,i,color),level*2,color);
 			}
 		}
 		
@@ -123,6 +140,12 @@ public class CPUPlayer extends Player {
 		return ((color+2)%2)+1;
 	}
 
+	public void trashTalk() {
+		
+		System.out.println(trashtalk[level-1]);
+		
+	}
+	
 }
 
 		

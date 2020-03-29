@@ -91,18 +91,19 @@ public class Connect4 {
 			hmove = human.getMove(board);
 			while(count<20 && !board.move(hmove,human.getColor())) {
 				count++;
-				cmove = human.getMove(board);
+				hmove = human.getMove(board);
 			}
 			count = 0;
 			board.printBoard();
 				
 			result = board.checkWinner();
 			if(result>0 && result==computer.getColor()) { 
-				printWinner(result,computer.getName());
+				printWinner(board,result,computer.getName());
+				computer.trashTalk();
 				return;
 			}
 			else if(result>0 && result==human.getColor()) { 
-				printWinner(result,human.getName());
+				printWinner(board,result,human.getName());
 				return;
 			}
 			
@@ -120,21 +121,22 @@ public class Connect4 {
 			
 			result = board.checkWinner();
 			if(result>0 && result==computer.getColor()) { 
-				printWinner(result,computer.getName());
+				printWinner(board,result,computer.getName());
+				computer.trashTalk();
 				return;
 			}
 			else if(result>0 && result==human.getColor()) { 
-				printWinner(result,human.getName());
+				printWinner(board,result,human.getName());
 				return;
 			}
 			
 		}
 	}
 		
-	private void printWinner(int result, String name) {
+	private void printWinner(Board b, int result, String name) {
 		
-		if(result == Board.YELLOW) System.out.println("YELLOW has a Connect4 - "+name+" wins!");
-		else if(result == Board.RED) System.out.println("RED has a Connect4 - "+name+" wins!");
+		if(result == Board.YELLOW) System.out.println("YELLOW has a Connect4 - "+name+" wins in "+b.getRound()+" rounds");
+		else if(result == Board.RED) System.out.println("RED has a Connect4 - "+name+" wins in "+b.getRound()+" rounds");
 		else System.out.println("The game was a DRAW");
 	}
 
@@ -192,11 +194,11 @@ public class Connect4 {
 			
 			result = board.checkWinner();
 			if(result>0 && result==p1.getColor()) { 
-				printWinner(result,p1.getName());
+				printWinner(board,result,p1.getName());
 				return;
 			}
 			else if(result>0 && result==p2.getColor()) { 
-				printWinner(result,p2.getName());
+				printWinner(board,result,p2.getName());
 				return;
 			}
 			
@@ -215,11 +217,11 @@ public class Connect4 {
 			
 			result = board.checkWinner();
 			if(result>0 && result==p1.getColor()) { 
-				printWinner(result,p1.getName());
+				printWinner(board,result,p1.getName());
 				return;
 			}
 			else if(result>0 && result==p2.getColor()) { 
-				printWinner(result,p2.getName());
+				printWinner(board,result,p2.getName());
 				return;
 			}
 			
