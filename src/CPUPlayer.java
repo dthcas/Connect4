@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class CPUPlayer extends Player {
 
 	int level;
+	int process;
 	private String names[] = {"Bozo","Noddy","Porky","Beebot","Zoltan","Gregor","Ivan"};
 	private String trashtalk[] = {	"Ouch.. you just got clowned on by Bozo.  Better luck next time!",
 									"Tee hee! Noddy just took you to school!",
@@ -45,6 +46,7 @@ public class CPUPlayer extends Player {
 		int tally[] = new int[b.getColumns()+1];
 		int nextmove;
 		int highscore=0;
+		this.process=0;
 		// Choose a random column to play
 		
 		nextmove = (int) (Math.random()*b.getColumns())+1;
@@ -60,8 +62,9 @@ public class CPUPlayer extends Player {
 				tally[i] = -999999999;
 			}
 			else {
-				if(b.getRound()<=2) tally[i] = lookAhead(nextBoard(b,i,color),b.getRound(),color);
-				else tally[i] = lookAhead(nextBoard(b,i,color),level+2,color);
+				
+				tally[i] = lookAhead(nextBoard(b,i,color),level,color);
+			
 			}
 		}
 		
@@ -78,34 +81,49 @@ public class CPUPlayer extends Player {
 			else System.out.print(",");
 		}
 		
+		System.out.println("This move required "+this.process+" contemplations");
 		return nextmove;
 		
 	}
 	
 	private int lookAhead(Board b, int levels, int playcolor) throws CloneNotSupportedException {
 		
-		if(b==null) return 0;
-		if(evaluate(b)==-1) return -1;
-		if(evaluate(b)==1) return 1;
+		if(b==null && playcolor==color) return 0;
+		if(b==null && playcolor != color) return 0;
 		if(levels==0) return 0;
+		
+		this.process++;
+		int result = evaluate(b);
+		
+		if(result == 1) return 1000;
+		if(result == -1) return -1000;;
+		
+		
 		int columns = b.getColumns();
 		int tally[] = new int[columns+1];
 		int total = 0;
 		
 		Board newboard;
+		int newcolor = getNextColor(playcolor);
 		
 		for(int i=1; i<=columns; i++) {
 			
-				newboard = nextBoard(b,i,getNextColor(playcolor));
-				tally[i] = lookAhead(newboard,levels-1,getNextColor(playcolor));
-
+				newboard = nextBoard(b,i,newcolor);
+				tally[i] = lookAhead(newboard,levels-1,newcolor);
+				System.out.println("Level "+(levels-1)+"."+i+" returns "+tally[i]);
+				total += tally[i];
+				
 		}
 		
-		int maxval = tally[1];
-		int maxindex = 1;
-		int minval = tally[1];
-		int minindex = 1;
-		if(playcolor==color) {
+		if(levels==1) {
+			
+			return total;
+		}
+		
+		int maxval = -99999999;
+		int minval = 999999999;
+		
+		if(newcolor==color) {
 			for(int i=1; i<=columns; i++) {
 				if(tally[i]>maxval) {
 					maxval=tally[i];
@@ -115,8 +133,9 @@ public class CPUPlayer extends Player {
 		}
 		else {
 			for(int i=1; i<=columns; i++) {
-				total += tally[i];
-				if(tally[i]<minval) minval=tally[i];
+				if(tally[i]<minval) {
+					minval=tally[i];
+				}
 			}
 			return minval;
 		}
@@ -126,7 +145,6 @@ public class CPUPlayer extends Player {
 	
 	private int evaluate(Board b) {
 		
-		if(level == 0) return 0;
 		if(b == null) return 0;
 
 		
@@ -135,6 +153,7 @@ public class CPUPlayer extends Player {
 		
 		if(color==Board.RED) opcol = Board.YELLOW;
 		else opcol = Board.RED;
+		
 		
 		if(result==color) return 1;
 		else if(result==opcol) return -1;
