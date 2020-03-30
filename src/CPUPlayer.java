@@ -61,17 +61,21 @@ public class CPUPlayer extends Player {
 			}
 			else {
 				if(b.getRound()<=2) tally[i] = lookAhead(nextBoard(b,i,color),b.getRound(),color);
-				else tally[i] = lookAhead(nextBoard(b,i,color),level*2,color);
+				else tally[i] = lookAhead(nextBoard(b,i,color),level+2,color);
 			}
 		}
 		
 		//we already have a random value for nextmove, but let's check the tally if there are better
 		highscore = tally[nextmove];
+		System.out.print("Column scores: [");
 		for(int i=1; i<=b.getColumns(); i++) {
 			if(tally[i]>highscore) {
 				nextmove = i;
 				highscore = tally[i];
 			}
+			System.out.print(i+":"+tally[i]);
+			if(i==b.getColumns()) System.out.println("]");
+			else System.out.print(",");
 		}
 		
 		return nextmove;
@@ -81,9 +85,9 @@ public class CPUPlayer extends Player {
 	private int lookAhead(Board b, int levels, int playcolor) throws CloneNotSupportedException {
 		
 		if(b==null) return 0;
-		if(levels==0) return 0;
 		if(evaluate(b)==-1) return -1;
-		
+		if(evaluate(b)==1) return 1;
+		if(levels==0) return 0;
 		int columns = b.getColumns();
 		int tally[] = new int[columns+1];
 		int total = 0;
@@ -93,14 +97,31 @@ public class CPUPlayer extends Player {
 		for(int i=1; i<=columns; i++) {
 			
 				newboard = nextBoard(b,i,getNextColor(playcolor));
-				tally[i] += lookAhead(newboard,levels-1,getNextColor(playcolor));
-		}
-			
-		for(int i=1; i<=columns; i++) {
-			total += tally[i];	
+				tally[i] = lookAhead(newboard,levels-1,getNextColor(playcolor));
+
 		}
 		
-		return total;
+		int maxval = tally[1];
+		int maxindex = 1;
+		int minval = tally[1];
+		int minindex = 1;
+		if(playcolor==color) {
+			for(int i=1; i<=columns; i++) {
+				if(tally[i]>maxval) {
+					maxval=tally[i];
+				}
+			}
+			return maxval;
+		}
+		else {
+			for(int i=1; i<=columns; i++) {
+				total += tally[i];
+				if(tally[i]<minval) minval=tally[i];
+			}
+			return minval;
+		}
+		
+		
 	}
 	
 	private int evaluate(Board b) {
@@ -148,7 +169,3 @@ public class CPUPlayer extends Player {
 	}
 	
 }
-
-		
-
-
