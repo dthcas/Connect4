@@ -62,8 +62,9 @@ public class CPUPlayer extends Player {
 				tally[i] = -999999999;
 			}
 			else {
+				// Level 1-3 were not very smart.. let's help them out a bit by adding 3
+				tally[i] = lookAhead(nextBoard(b,i,color),level+3,color);
 				
-				tally[i] = lookAhead(nextBoard(b,i,color),level+2,color);
 			
 			}
 		}
